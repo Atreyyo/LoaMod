@@ -1,0 +1,10 @@
+## Interface: 11200
+## Title: LoaMod
+## Author: |cff0000FFRaikko
+## Version: 1.0
+## Notes: A Loatheb boss mod - by |cff0000FFRaikko 
+## DefaultState: Enabled
+## LoadOnDemand: 0
+## SavedVariablesPerCharacter: 
+
+LoaMod.lua
