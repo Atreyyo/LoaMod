@@ -42,7 +42,9 @@ function LoaMod:OnEvent()
 				LoaMod.Healers = {}
 				for text in string.gfind(arg2,"%d%a+") do	
 					--LoaMod:print("Adding "..text.." healer list")
-					table.insert(LoaMod.Healers,string.sub(text,2,string.len(text)))
+					if not LoaMod:IsInHealTable(name) then
+						table.insert(LoaMod.Healers,string.sub(text,2,string.len(text)))
+					end
 				end
 				LoaMod:UpdateHealers()
 			elseif string.sub(arg1,7,string.len(arg1)) == "Ignore" then
@@ -425,7 +427,9 @@ function LoaMod:AddFrame(name)
 			else
 				--LoaMod:print("Adding "..name)
 				LoaMod.Ignore[name] = nil
-				table.insert(LoaMod.Healers,name)
+				if not LoaMod:IsInHealTable(name) then
+					table.insert(LoaMod.Healers,name)
+				end
 				LoaMod:UpdateHealers()
 				LoaMod:SendHealers()
 			end
@@ -897,6 +901,15 @@ function LoaMod:IsRaidInCombat()
 	end
 end
 
+function LoaMod:IsInHealTable(name)
+	for k,v in pairs(LoaMod.Healers) do
+		if v == name then
+			return true
+		end
+	end
+	return false
+end
+
 function LoaMod:UpdateHealers()
 	if GetRaidRosterInfo(1) then
 		for k, name in pairs(LoaMod.Healers) do
@@ -909,7 +922,9 @@ function LoaMod:UpdateHealers()
 		for i=1,GetNumRaidMembers() do
 			local name = UnitName("raid"..i)
 			if (UnitClass("raid"..i) == "Priest" or UnitClass("raid"..i) == "Paladin" or UnitClass("raid"..i) == "Shaman" or UnitClass("raid"..i) == "Druid") and not LoaMod:InHealTab(name) and LoaMod.Ignore[name] == nil then				
-				table.insert(LoaMod.Healers, name)
+				if not LoaMod:IsInHealTable(name) then
+					table.insert(LoaMod.Healers, name)
+				end
 			end
 		end
 		--local index = 0
